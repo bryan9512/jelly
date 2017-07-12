@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+ 
+  <title>JELLY</title>
+  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+  <%= csrf_meta_tags%>
+  <link rel="stylesheet" href="../../font-awesome/css/font-awesome.min.css">
+  <!--팝업레이어 글 작성 코드-->
+  <script>
+    // 접근성 관련 포커스 강제 이동
+function accessibilityFocus() {
+  
+  $(document).on('keydown', '[data-focus-prev], [data-focus-next]', function(e){
+    var next = $(e.target).attr('data-focus-next'),
+        prev = $(e.target).attr('data-focus-prev'),
+        target = next || prev || false;
+    
+    if(!target || e.keyCode != 9) {
+      return;
+    }
+    
+    if( (!e.shiftKey && !!next) || (e.shiftKey && !!prev) ) {
+      setTimeout(function(){
+        $('[data-focus="' + target + '"]').focus();
+      }, 1);
+    }
+    
+  });
+  
+}
+
+function tooltip() {
+  var openBtn = '[data-tooltip]',
+      closeBtn = '.tooltip-close';
+  
+  function getTarget(t) {
+    return $(t).attr('data-tooltip');
+  }
+  
+  function open(t) {
+    var showTarget = $('[data-tooltip-con="' + t + '"]');
+    showTarget.show().focus();
+    showTarget.find('.tooltip-close').data('activeTarget', t);
+  }
+  
+  function close(t) {
+    var activeTarget = $('[data-tooltip-con="' + t + '"]');
+    activeTarget.hide();
+    $('[data-tooltip="' + t + '"]').focus();
+  }
+  
+  $(document)
+    .on('click', openBtn, function(e){
+      e.preventDefault();
+      open(getTarget(e.target));
+    })
+    .on('click', closeBtn, function(e) {
+      e.preventDefault();
+      close($(this).data('activeTarget'));
+    })
+  
+}
+
+
+$(document).ready(function(){
+  
+  tooltip();
+  accessibilityFocus();
+  
+});
+
+</script>
+  <!--팝업레이어 코드 -->
+</head>
+<body>
+<header>
+  
+
+<div class="navbar">
+    <nav id="top-nav">
+        <div class="logo"><a href="/home/index"><h1>HOME</h1></a></div>
+        <div class="menu">
+        <ul class="ull">
+            <li class="lii"><a href="/home/notice">주요공지</a></li>
+            <li class="lii"><a href="/home/ask">질의응답</li>
+            <li class="lii"><a href="#">회계서비스</a></li>
+            <li class="lii"><a href="#">강의평가</a></li>
+        </ul>
+        </div>
+        <div id="log-in">
+           <a href="#">log-in</a>
+        </div>
+    </nav>
+</div>
+</header>
+
+<%= yield %>
+
+<div class="top">
+  <a href="#">top</a>
+</div>
+</body>
+</html>
